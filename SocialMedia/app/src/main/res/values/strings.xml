@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">SocialMedia</string>
+    <string name="description_home_icon">home icon used to access your profile</string>
+    <string name="profile_pic_circle">This is where the profile pic is placed</string>
+    <string name="title_activity_profile_and_settings">ProfileAndSettings</string>
+    <string name="title_activity_register">Register</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="todo">TODO</string>
+    <string name="text_under_the_sign_in_or_register_button">or use</string>
+</resources>
