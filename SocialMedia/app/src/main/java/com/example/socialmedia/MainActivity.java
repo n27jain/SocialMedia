@@ -1,16 +1,14 @@
 package com.example.socialmedia;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.EditText;
 
+import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.net.Inet4Address;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,10 +20,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();
+
+
     }
 
     @Override
-    protected void onStart() {
+    protected void onStart() { // When the main activity starts we need to see that a user is logged in. Otherwise we need to register/log them in
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
