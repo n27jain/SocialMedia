@@ -31,6 +31,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage:18.1.1'
     implementation 'com.google.android.material:material:1.0.0'
 
+    //play services
+    implementation 'com.google.android.gms:play-services-auth:17.0.0'
 
     //custom
     implementation 'de.hdodenhof:circleimageview:3.0.0'

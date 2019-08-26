@@ -2,9 +2,8 @@ package com.example.socialmedia;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
-
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -13,7 +12,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-
+    private FireBaseUserDataHandler handle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,17 +21,6 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
 
-    }
-
-    @Override
-    protected void onStart() { // When the main activity starts we need to see that a user is logged in. Otherwise we need to register/log them in
-        super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-
-        if(currentUser == null){
-            SendUserToRegisterActivity();
-
-        }
     }
 
     private void SendUserToRegisterActivity() {
@@ -48,4 +36,29 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, ProfileAndSettings.class);
         startActivity(intent);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mAuth = FirebaseAuth.getInstance();
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            Log.d("FIX", currentUser.getEmail());
+            SetUpDataFromDB();
+        }
+
+        if (currentUser == null) {
+            SendUserToRegisterActivity();
+        }
+    }
+
+    private void SetUpDataFromDB() {
+        //TODO: By default we should be on the feed section in this app.
+        // create a nice loading screen while it updates the users feed
+        //UserAccount account = handle.GetUserDataByUI(handle.getUI());
+
+    }
+
+
 }

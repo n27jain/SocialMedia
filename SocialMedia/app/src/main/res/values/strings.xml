@@ -14,4 +14,21 @@
     <string name="login_failed">"Login failed"</string>
     <string name="todo">TODO</string>
     <string name="text_under_the_sign_in_or_register_button">or use</string>
+    <string name="error_user_already_signed_up">The email address is already in use by another account.</string>
+
+    <string name="gender_prompt">Gender</string>
+
+    <string-array name="genders_array">
+        <item>Male</item>
+        <item>Female</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="counties_array">
+        <item>USA</item>
+        <item>CANADA</item>
+        <item>INDIA</item>
+    </string-array>
+
+
 </resources>

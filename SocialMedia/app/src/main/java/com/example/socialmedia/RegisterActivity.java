@@ -4,44 +4,83 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import java.net.URL;
+import java.util.HashMap;
 import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private FirebaseAuth mAuth;
+
+    //TODO: Add FB authentication
+
+    private static final int RC_SIGN_IN = 1;
+    private FireBaseUserDataHandler handler;
+
     private EditText email , password;
     private ProgressDialog loadingBar;
+
+    private GoogleApiClient mGoogleSignInClient;
+    private static String gTag = "GOOGLE";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
-        mAuth = FirebaseAuth.getInstance();
-        email = findViewById(R.id.email);
+        email = findViewById(R.id.username);
         password = findViewById(R.id.password);
         loadingBar = new ProgressDialog(this);
+
+        // Configure Google Sign In This also authenticates it
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        mGoogleSignInClient = new GoogleApiClient.Builder(this).enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
+            @Override
+            public void onConnectionFailed(@NonNull ConnectionResult connectionResult) { // we need to make sure google IS ACCESSIBLE
+
+                Toast.makeText(RegisterActivity.this,"Connecting to GOOGLE failed", Toast.LENGTH_SHORT).show();
+            }
+        })
+        .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+        .build();
+
+        handler = new FireBaseUserDataHandler();
+
     }
 
     public void checkLog(View view) {// check in the login info
         CreateOrVerifyAccount();
     }
-
     private void CreateOrVerifyAccount() {
 
-        String getEmail = email.getText().toString();
-        String getPassword = password.getText().toString();
+        final String getEmail = email.getText().toString();
+        final String getPassword = password.getText().toString();
 
         if(getEmail.isEmpty()){
             Toast.makeText(this, "Please enter the email.", Toast.LENGTH_SHORT).show();
@@ -54,24 +93,147 @@ public class RegisterActivity extends AppCompatActivity {
             loadingBar.setTitle("Creating New Account");
             loadingBar.setMessage("Please wait while we verify your account ...");
             loadingBar.show();
-            loadingBar.setCanceledOnTouchOutside(true); // prevent user from touching the outside to close it.
-
-            mAuth.createUserWithEmailAndPassword(getEmail, getPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            loadingBar.setCanceledOnTouchOutside(true); // prevent user from touching the outside to close it
+            handler.getmAuth().createUserWithEmailAndPassword(getEmail, getPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()) {
                         loadingBar.dismiss();
-                        Toast.makeText(RegisterActivity.this, "Logged in!", Toast.LENGTH_SHORT).show();
+                        UpdateUIAndSendToNextActivity(null);
+                        Toast.makeText(RegisterActivity.this, "Successful Registration!", Toast.LENGTH_SHORT).show();
+                        SendToSetUpActivity();
+                        SendToSetUpActivity();// Success log in. Send to Main activity
+
                     }
                     else { // any error explained
                         String message = Objects.requireNonNull(task.getException()).getMessage();
+
+                        // already registered use
+                        if( message!= null && message.equals(getString(R.string.error_user_already_signed_up))) {
+                            PerformSignIn(getEmail, getPassword);
+                        }
+                        else {
+
+                            Log.d("FIX", Objects.requireNonNull(message));
+                            Toast.makeText(RegisterActivity.this, message, Toast.LENGTH_SHORT).show();
+                        }
                         loadingBar.dismiss();
-                        Toast.makeText(RegisterActivity.this,  message, Toast.LENGTH_SHORT).show();
                     }
                 }
-            });
 
+
+            });
         }
 
     }
+    private void PerformSignIn(String inEmail, String inPass) {
+
+        handler.getmAuth().signInWithEmailAndPassword(inEmail, inPass)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d("FIX", "signInWithEmail:success");
+                           // SendToSetUpActivity();
+
+                            UpdateUIAndSendToNextActivity(null);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.e("FIX", "signInWithEmail:failure", task.getException());
+                            Toast.makeText(RegisterActivity.this, "Account Exists. Invalid Password!",
+                                    Toast.LENGTH_SHORT).show();
+                          //  UpdateUIAndSendToNextActivity(null);
+                        }
+
+                        // ...
+                    }
+                });
+    }
+    private void SendToSetUpActivity() {
+        Intent registerIntent = new Intent (RegisterActivity.this, SetUpActivity.class);
+        registerIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(registerIntent);
+        finish(); // clear the current activities visuals
+    }
+    private void SendToMainActivity(){
+        Intent registerIntent = new Intent (RegisterActivity.this, MainActivity.class);
+        registerIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(registerIntent);
+        finish(); // clear the current activities visuals
+    }
+
+
+    //google sign in
+        public void GoogleSignIn(View view) {
+
+            Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleSignInClient);
+            startActivityForResult(signInIntent, RC_SIGN_IN);
+        }
+
+        @Override
+        public void onActivityResult(int requestCode, int resultCode, Intent data) {
+            super.onActivityResult(requestCode, resultCode, data);
+
+            // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+            if (requestCode == RC_SIGN_IN) {
+                GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+                if(result.isSuccess()){
+                    Log.d(gTag, "Successful Log in");
+                    GoogleSignInAccount account = result.getSignInAccount();
+                    firebaseAuthWithGoogle(account);
+                }
+                else{ // error found
+                    Log.e(gTag, "an error occured. Request code : " + requestCode);
+                }
+            }
+        }
+
+        private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+            if(acct != null) {
+                Log.d(gTag, "firebaseAuthWithGoogle:" + acct.getId());
+                AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+                handler.getmAuth().signInWithCredential(credential)
+                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    // Sign in success, update UI with the signed-in user's information
+                                    Log.d(gTag, "signInWithCredential:success");
+                                    FirebaseUser user = handler.getmAuth().getCurrentUser();
+                                    UpdateUIAndSendToNextActivity(user);
+                                } else {
+                                    // If sign in fails, display a message to the user.
+                                    Log.e(gTag, "signInWithCredential:failure", task.getException());
+                                    Toast.makeText(RegisterActivity.this, Objects.requireNonNull(task.getException()).toString(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+            }
+            else{
+                Log.e(gTag, "Account provided was null" );
+            }
+        }
+
+    private void UpdateUIAndSendToNextActivity(FirebaseUser user) {
+        UserAccount currentUser = handler.GetUserDataByUI(user.getUid());
+
+        if(currentUser != null) {
+            Log.d("DATA", currentUser.getUserName());
+            int status = currentUser.getStatus();
+            switch (status) {
+                case 0: // the account is new
+                    SendToSetUpActivity();
+                    finish();
+                case 1:// user has already signed up!
+                    SendToMainActivity();
+                    finish();
+                case 2:// user is banned
+                    Toast.makeText(this, "This account is currently banned", Toast.LENGTH_SHORT).show(); // TODO: create solution for banned account
+                case 3:// there is an error with this account
+                    Toast.makeText(this, "There is an error with your account. We apologize for the inconvenience. Please try again later.", Toast.LENGTH_SHORT).show(); // TODO: create crashalytics for this
+            }
+        }
+    }
+
 }
