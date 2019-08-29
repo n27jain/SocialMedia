@@ -36,20 +36,24 @@ public class RegisterActivity extends AppCompatActivity {
 
     //TODO: Add FB authentication
 
-    private static final int RC_SIGN_IN = 1;
     private FireBaseUserDataHandler handler;
+    private FirebaseAuth firebaseAuth;
 
+    private static final int RC_SIGN_IN = 1;
     private EditText email , password;
     private ProgressDialog loadingBar;
-
     private GoogleApiClient mGoogleSignInClient;
     private static String gTag = "GOOGLE";
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+
         email = findViewById(R.id.username);
         password = findViewById(R.id.password);
         loadingBar = new ProgressDialog(this);
@@ -94,7 +98,7 @@ public class RegisterActivity extends AppCompatActivity {
             loadingBar.setMessage("Please wait while we verify your account ...");
             loadingBar.show();
             loadingBar.setCanceledOnTouchOutside(true); // prevent user from touching the outside to close it
-            handler.getmAuth().createUserWithEmailAndPassword(getEmail, getPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            firebaseAuth.createUserWithEmailAndPassword(getEmail, getPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()) {
@@ -128,7 +132,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
     private void PerformSignIn(String inEmail, String inPass) {
 
-        handler.getmAuth().signInWithEmailAndPassword(inEmail, inPass)
+        firebaseAuth.signInWithEmailAndPassword(inEmail, inPass)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -193,14 +197,14 @@ public class RegisterActivity extends AppCompatActivity {
             if(acct != null) {
                 Log.d(gTag, "firebaseAuthWithGoogle:" + acct.getId());
                 AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-                handler.getmAuth().signInWithCredential(credential)
+                firebaseAuth.signInWithCredential(credential)
                         .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     // Sign in success, update UI with the signed-in user's information
                                     Log.d(gTag, "signInWithCredential:success");
-                                    FirebaseUser user = handler.getmAuth().getCurrentUser();
+                                    FirebaseUser user = firebaseAuth.getCurrentUser();
                                     UpdateUIAndSendToNextActivity(user);
                                 } else {
                                     // If sign in fails, display a message to the user.
@@ -216,24 +220,50 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
     private void UpdateUIAndSendToNextActivity(FirebaseUser user) {
-        UserAccount currentUser = handler.GetUserDataByUI(user.getUid());
+                if(user != null){
 
-        if(currentUser != null) {
-            Log.d("DATA", currentUser.getUserName());
-            int status = currentUser.getStatus();
-            switch (status) {
-                case 0: // the account is new
-                    SendToSetUpActivity();
-                    finish();
-                case 1:// user has already signed up!
-                    SendToMainActivity();
-                    finish();
-                case 2:// user is banned
-                    Toast.makeText(this, "This account is currently banned", Toast.LENGTH_SHORT).show(); // TODO: create solution for banned account
-                case 3:// there is an error with this account
-                    Toast.makeText(this, "There is an error with your account. We apologize for the inconvenience. Please try again later.", Toast.LENGTH_SHORT).show(); // TODO: create crashalytics for this
-            }
-        }
+                    handler.GetUserDataByUI(user.getUid(), new FireBaseUserDataHandler.DataStatus() {
+                        @Override
+                        public void DataIsLoaded(UserAccount foundUser) {
+                            if(foundUser != null) {
+                                Log.d("DATA", foundUser.getUserName());
+                                int status = foundUser.getStatus();
+                                Log.d("DATA", "Status is: "+ status);
+                                switch (status) {
+                                    case 0: // the account is new
+                                        SendToSetUpActivity();
+                                        finish();
+                                        break;
+                                    case 1:// user has already signed up!
+                                        SendToMainActivity();
+                                        finish();
+                                        break;
+                                    case 2:// user is banned
+                                        Toast.makeText(RegisterActivity.this, "This account is currently banned", Toast.LENGTH_SHORT).show(); // TODO: create solution for banned account
+                                        break;
+                                    case 3:// there is an error with this account
+                                        Toast.makeText(RegisterActivity.this, "There is an error with your account. We apologize for the inconvenience. Please try again later.", Toast.LENGTH_SHORT).show(); // TODO: create crashalytics for this
+                                        break;
+                                }
+                            }
+                            else{
+                                SendToSetUpActivity();
+                                finish();
+                            }
+                        }
+
+
+                        @Override
+                        public void Error() {
+                            Log.e("DATA", "Data was not loaded properly.");
+                        }
+                    });
+                }
+                else{
+                    Log.e("DATA", "User was not a valid user");
+                }
+
+
     }
 
 }

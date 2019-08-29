@@ -11,6 +11,85 @@
     tools:context=".ProfileAndSettings">
    <include layout="@layout/profile_header"/>
 
+   <ScrollView
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          >
+
+         <TextView
+             android:id="@+id/displayAllInfo"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:text="TextView" />
+
+         <TextView
+             android:id="@+id/about_me"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="25dp"
+             android:layout_marginBottom="25dp"
+             android:text="About Me"
+             android:textAlignment="center"
+             android:textSize="25dp" />
+         <TextView
+             android:id="@+id/account"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:text="Account"
+             android:textSize="25dp"
+             android:textAlignment="center"
+             android:layout_marginTop="25dp"
+             android:layout_marginBottom="25dp"
+             />
+         <TextView
+             android:id="@+id/notification"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:text="Notification"
+             android:textSize="25dp"
+             android:textAlignment="center"
+             android:layout_marginTop="25dp"
+             android:layout_marginBottom="25dp"
+             />
+         <TextView
+             android:id="@+id/privacy"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:text="Privacy"
+             android:textSize="25dp"
+             android:textAlignment="center"
+             android:layout_marginTop="25dp"
+             android:layout_marginBottom="25dp"
+         />
+         <TextView
+             android:id="@+id/security"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:text="Security"
+             android:textSize="25dp"
+             android:textAlignment="center"
+             android:layout_marginTop="25dp"
+             android:layout_marginBottom="25dp"
+             />
+         <TextView
+             android:id="@+id/help"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:text="Help"
+             android:textSize="25dp"
+             android:layout_marginTop="25dp"
+             android:textAlignment="center"
+             android:layout_marginBottom="25dp"
+             />
+
+      </LinearLayout>
+   </ScrollView>
+
 
 </LinearLayout>
 

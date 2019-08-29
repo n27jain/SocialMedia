@@ -1,8 +1,11 @@
 package com.example.socialmedia;
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -11,6 +14,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.Map;
 import java.util.Objects;
@@ -18,58 +24,81 @@ import java.util.Objects;
 
 public  class FireBaseUserDataHandler {
 
-    private UserAccount foundUser;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference usersDB;
+    private DatabaseReference selectUserDB;
+    private UserAccount foundUser; // this will be the stored user account found from our db
+    private StorageReference UserProfileImageStorageReference;
+    private String ImgTAG = "IMAGETAG";
+    public interface DataStatus{
+        void DataIsLoaded(UserAccount foundUser);
+        void Error();
 
-    private FirebaseAuth mAuth ;
-    private FirebaseUser user  ;
-    private String UI ;
-    //TODO: Potential bug when provided invalid user, or user DNE.
-    private DatabaseReference completeDB ;
-    private DatabaseReference dB ;
+    }
+    public interface UpdateStatus{
+        void DataIsLoaded();
+        void Error();
 
-    public FireBaseUserDataHandler(){
-
-        foundUser = new UserAccount();
-        mAuth = FirebaseAuth.getInstance();
-        user  = mAuth.getCurrentUser();
-        if(user!= null) {
-            UI = Objects.requireNonNull(user).getUid();
-        }
-        completeDB = FirebaseDatabase.getInstance().getReference().child("Users"); // we create this database structure from our desired userid!;
-        if(user!=null) {
-            dB = completeDB.child((user).getUid()); // we create this database structure from our desired userid!;
-        }
-    } // Main constructor. By defualt it takes current user
-
-    public FirebaseAuth getmAuth() {
-        return mAuth;
     }
 
-    public FirebaseUser getUser(){
-        return this.user;
-    } // returns the most up to date stored user
+    public FireBaseUserDataHandler() { // constructor
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        usersDB = firebaseDatabase.getReference().child("Users");
+        UserProfileImageStorageReference= FirebaseStorage.getInstance().getReference();
+    }
 
-    public String getUI(){
-        return this.UI;
-    }// returns current User Id
+    public void GetUserDataByUI(String UI, final DataStatus dataStatus){
 
-    public Boolean UpdateUser(UserAccount inUser, final Context context){
+        if(UI != null) {
+            selectUserDB = usersDB.child(UI);
+            selectUserDB.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    Log.d("DATA", "Successful in reading.");
+                    UserAccount outPutUser = dataSnapshot.getValue(UserAccount.class); // works since we already filtered out the DB with our userID
+                    dataStatus.DataIsLoaded(outPutUser);
+                }
 
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.e("DATA", databaseError.toException().toString());
+                    dataStatus.Error();
+                }
+            });
+
+        }
+
+        else{
+            Log.e("DATA", "Error! a null id was provided!");
+            dataStatus.Error();
+        }
+    } // This method can also be used to try and find info for another fireBaseUser as well
+
+    public Boolean CheckIfUserNameExists(String UserName){
+        //TODO: Verify that no such username exists!
+        return false;
+    }
+
+    public Boolean UpdateUser(UserAccount inUser, final Context context , final UpdateStatus updateStatus ){
+        selectUserDB = usersDB.child(inUser.getUserID());
         Map<String,Object> mappedUser = inUser.toMap();
-        Task performTask = dB.updateChildren(mappedUser).addOnCompleteListener(
+        Task performTask = selectUserDB.updateChildren(mappedUser).addOnCompleteListener(
                 new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
 
                         if(task.isSuccessful()){
-                            Log.d("DATABASE", "Successful in logging in!"); // Find out why we need this twice!
+                            updateStatus.DataIsLoaded();
+                            Log.d("DATABASE", "Successful in trying to gain data!"); // Find out why we need this twice!
                         }else {
+                            updateStatus.Error();
                             Log.e("DATABASE", Objects.requireNonNull(Objects.requireNonNull(task.getException()).getMessage())); // Find out why we need this twice!
 
                         }
                     }
                 }
         );
+
         //TODO: Perform tests to make sure this is working perfectly
         if(performTask.isCanceled()){
             return false;
@@ -79,37 +108,63 @@ public  class FireBaseUserDataHandler {
         }
     }// after passing in the context for the Toast message and the User Account with the correctly stored data we can update it!
 
-    public UserAccount GetUserDataByUI(String UI){
-        //TODO: parse db object into UserAccount object
-        if(UI != null) {
-            UserAccount account = new UserAccount();
-            this.UI = UI;
-            completeDB.addValueEventListener(dataListener);
-            return foundUser;
-        }
-        else{
-            Log.e("DATA", "Error! a null id was provided!");
-            return null;
-        }
-    } // This method can also be used to try and find info for another user as well
+    public void SaveProfileImage(final String UserID, Uri uri,  final UpdateStatus updateStatus){
+        final StorageReference profileImageRef = UserProfileImageStorageReference.child("Users").child(UserID).child("profile_picture");
 
-    public Boolean CheckIfUserNameExists(String UserName){
-        //TODO: Verify that no such username exists!
-        return false;
-    } //TODO: Make a query to find out if such a user already exists
+        profileImageRef.putFile(uri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    if(task.isSuccessful()) {
+                        Log.d(ImgTAG, "Profile Image successfully Stored!");
 
-    private ValueEventListener dataListener = new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            Log.d("DATA", "Successful in reading.");;
-            foundUser = dataSnapshot.getValue(UserAccount.class); // works since we already filtered out the DB with our userID
-        }
+                        profileImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                final String downloadUrl = uri.toString();
+                                Log.d(ImgTAG, "downloadUrl:" + downloadUrl);
+                                UserAccount updateUriOnly = new UserAccount();
+                                updateUriOnly.setDPUrl(downloadUrl);
+                                updateUriOnly.setUserID(UserID);
+                                UpdateUser(updateUriOnly, null, new UpdateStatus() {
+                                            @Override
+                                            public void DataIsLoaded() {
+                                                updateStatus.DataIsLoaded();
+                                            }
 
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-            Log.e("DATA", databaseError.toException().toString());
-        }
-    }; // This is the on data change listner. It is very important for updated information.
+                                            @Override
+                                            public void Error() {
+                                                updateStatus.Error();
+                                            }
+                                        }
+                                );
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                //TODO: Handle any errors
+                                Log.e(ImgTAG, "this guy failed");
+                            }
+                        });
+                    }
+                    else{
+                        Log.e(ImgTAG, "Profile Image unable to be Stored!");
+                    }
+                }
+
+            }
+
+        );
+
+    }
+
+
+
+
+
+
+
+
+
 
 
 }

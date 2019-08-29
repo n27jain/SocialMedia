@@ -4,47 +4,72 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class ProfileAndSettings extends AppCompatActivity {
 
     private Button logOut;
-    private FirebaseAuth mAuth;
-    private FireBaseUserDataHandler handler;
-
+    private FirebaseAuth firebaseAuth;
+    private FireBaseUserDataHandler handle;
+    private TextView userNameView;
+    String sTag = "SETTINGS";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_and_settings);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        userNameView = findViewById(R.id.username_profile_header);
         logOut = findViewById(R.id.logOutButton);
-        handler = new FireBaseUserDataHandler(); // TODO: Potential bug? We might need the constructor?
+        handle = new FireBaseUserDataHandler(); // TODO: Potential bug? We might need the constructor?
 
         logOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mAuth = FirebaseAuth.getInstance();
-                Log.d("FIX", mAuth.toString());
-                mAuth.signOut();
+                firebaseAuth = FirebaseAuth.getInstance();
+                Log.d("FIX", firebaseAuth.toString());
+                firebaseAuth.signOut();
                // Log.d("FIX", mAuth.getCurrentUser().getEmail());
                 Intent goToMainActivity = new Intent(ProfileAndSettings.this, MainActivity.class);
                 startActivity(goToMainActivity);
                 finish();
             }
         });
+        SetUpDataFromDB();
 
     }
     private void SetUpDataFromDB() {
-        //TODO: By default we should be on the feed section in this app.
-        // create a nice loading screen while it updates the users feed
-        //UserAccount account = handle.GetUserDataByUI(handle.getUI());
+
+        if(firebaseAuth.getCurrentUser() != null){
+            handle.GetUserDataByUI(firebaseAuth.getCurrentUser().getUid(), new FireBaseUserDataHandler.DataStatus() {
+                @Override
+                public void DataIsLoaded(UserAccount foundUser) {
+                    if(foundUser != null) {
+                        Log.d(sTag, foundUser.getUserName());
+                        userNameView.setText(foundUser.getUserName());
+                        TextView displayAll = findViewById(R.id.displayAllInfo);
+                        displayAll.setText(foundUser.getUserID()+ ";  "+foundUser.getFullName()+ ";  "+foundUser.getEmail()+ ";  "+foundUser.getGender());
+                    }
+                }
+
+
+                @Override
+                public void Error() {
+                    Log.e("DATA", "Data was not loaded properly.");
+                }
+            });
+        }
+        else{
+            Log.e("FIX", "USER DATA WAS NOT FOUND!!!");
+        }
 
     }
 

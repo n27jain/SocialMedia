@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class UserAccount {
 
-    private String UserName, FullName, Email, Phone;
+    private String UserName , FullName, Email, Phone , UserID ;
 
     private String DPUrl;
 
@@ -29,6 +29,7 @@ public class UserAccount {
 
 
     public UserAccount(String userName, String fullName, String email, String phone, String dpUrl, int country, int gender, int status) {
+
         UserName = userName;
         FullName = fullName;
         Email = email;
@@ -125,11 +126,23 @@ public class UserAccount {
 
     public Map<String, Object> toMap() {
         HashMap<String, Object> userMap = new HashMap<>();
-        userMap.put("username",UserName);
-        userMap.put("fullname",FullName);
-        userMap.put("country",Country);
-        userMap.put("gender",Gender);
-        userMap.put("status",Status);
+
+        userMap.put("UserID",UserID);
+        userMap.put("UserName",UserName);
+        userMap.put("FullName",FullName);
+        userMap.put("Email",Email);
+        userMap.put("DPUrl", DPUrl);
+        userMap.put("Country",Country );
+        userMap.put("Gender",Gender);
+        userMap.put("Status",Status);
         return userMap;
+    }
+
+    public String getUserID() {
+        return UserID;
+    }
+
+    public void setUserID(String userID) {
+        UserID = userID;
     }
 }

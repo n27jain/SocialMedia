@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     private void SetUpDataFromDB() {
         //TODO: By default we should be on the feed section in this app.
         // create a nice loading screen while it updates the users feed
-        //UserAccount account = handle.GetUserDataByUI(handle.getUI());
+        //UserAccount account = handle.GetUserDataByUI(handle.getUID());
 
     }
 
