@@ -1,8 +1,10 @@
-package com.example.socialmedia;
+package com.example.socialmedia.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.socialmedia.R;
 
 public class RegisterDetailsActivity extends AppCompatActivity {
 

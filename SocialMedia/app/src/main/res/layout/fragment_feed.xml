@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragments.FeedFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/newPostTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create a new post"
+            android:textAlignment="center"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/newPostInsertImage"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:textSize="14sp"
+            android:text="Insert Image" />
+
+        <ImageView
+            android:id="@+id/uploaded_image"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:contentDescription="This is where we display the image for the one we selected."
+            android:padding="5dp" />
+
+        <EditText
+            android:id="@+id/newPostMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Whats this about?"
+            android:maxLines="8"
+            android:inputType="textMultiLine" />
+
+        <Button
+            android:id="@+id/postButton"
+            android:layout_marginStart="300dp"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="Post" />
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/allPostsRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+        </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
+
+
+</FrameLayout>

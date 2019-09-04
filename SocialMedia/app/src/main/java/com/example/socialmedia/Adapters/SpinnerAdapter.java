@@ -1,7 +1,6 @@
-package com.example.socialmedia;
+package com.example.socialmedia.Adapters;
 
 import android.content.Context;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +10,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.example.socialmedia.R;
+import com.example.socialmedia.Objects.SpinnerObject;
 
 import java.util.ArrayList;
 

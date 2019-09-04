@@ -1,4 +1,4 @@
-package com.example.socialmedia;
+package com.example.socialmedia.Objects;
 
 public class SpinnerObject {
     public String  label;

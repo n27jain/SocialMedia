@@ -1,4 +1,4 @@
-package com.example.socialmedia;
+package com.example.socialmedia.Objects;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,11 +30,21 @@ public class UserAccount {
 
     public UserAccount(String userName, String fullName, String email, String phone, String dpUrl, int country, int gender, int status) {
 
+        if(userName != null)
         UserName = userName;
+
+        if(fullName != null)
         FullName = fullName;
+
+        if(email != null)
         Email = email;
+
+        if(phone != null)
         Phone = phone;
+
+        if(dpUrl != null)
         DPUrl = dpUrl;
+
         Country = country;
         Gender = gender;
         Status = status;
@@ -135,6 +145,7 @@ public class UserAccount {
         userMap.put("Country",Country );
         userMap.put("Gender",Gender);
         userMap.put("Status",Status);
+        userMap.put("Phone No",Phone);
         return userMap;
     }
 

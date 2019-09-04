@@ -1,4 +1,4 @@
-package com.example.socialmedia;
+package com.example.socialmedia.Activities;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,15 +7,19 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.socialmedia.Adapters.SpinnerAdapter;
+import com.example.socialmedia.Constants;
+import com.example.socialmedia.Handlers.FireBaseUserDataHandler;
+import com.example.socialmedia.Objects.SpinnerObject;
+import com.example.socialmedia.Objects.UserAccount;
+import com.example.socialmedia.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -77,7 +81,7 @@ public class SetUpActivity extends AppCompatActivity {
 
     private void initAdapter() {
         genderList = new ArrayList<>();
-        genderList.add(new SpinnerObject("Male",R.drawable.male,Constants.GEN_MALE  ));
+        genderList.add(new SpinnerObject("Male",R.drawable.male, Constants.GEN_MALE  ));
         genderList.add(new SpinnerObject("Female",R.drawable.female,Constants.GEN_FEMALE ));
         genderList.add(new SpinnerObject("Other",R.drawable.other,Constants.GEN_OTHER ));
 
@@ -101,9 +105,10 @@ public class SetUpActivity extends AppCompatActivity {
         handler.GetUserDataByUI(infoFromRegister.getUid(), new FireBaseUserDataHandler.DataStatus() {
             @Override
             public void DataIsLoaded(UserAccount foundUser) {
-                String dpURL = foundUser.getDPUrl();
-                if(dpURL != null){
-                    Picasso.get().load(dpURL).into(editDP);
+                if(foundUser != null) {
+                    if (foundUser.getDPUrl() != null) {
+                        Picasso.get().load(foundUser.getDPUrl()).into(editDP);
+                    }
                 }
             }
 
@@ -147,19 +152,23 @@ public class SetUpActivity extends AppCompatActivity {
 
     }
 
-    private void MakeAndSaveProfile(String tUsername , String tFullname, int tCountry, int tGender  ) {
+    private void MakeAndSaveProfile(final String tUsername , final String tFullname, final int tCountry, final int tGender  ) {
 
-        String email = infoFromRegister.getEmail();
-        String phone = infoFromRegister.getPhoneNumber();
-        String dpUrl = " ";
-        //TODO: Work with image
-
-        int country = tCountry;
-        int gender = tGender;
-
-        UserAccount account = new UserAccount(tUsername, tFullname, email, phone, null, country, gender, 1);
-        account.setUserID(firebaseAuth.getCurrentUser().getUid());
-        handler.UpdateUser(account, this, new FireBaseUserDataHandler.UpdateStatus() {
+        infoFromRegister = firebaseAuth.getCurrentUser();
+        handler.GetUserDataByUI(infoFromRegister.getUid(), new FireBaseUserDataHandler.DataStatus() {
+            @Override
+            public void DataIsLoaded(UserAccount foundUser) {
+                String email = infoFromRegister.getEmail();
+                if(email != null)
+                foundUser.setEmail(email);
+                foundUser.setPhone(infoFromRegister.getPhoneNumber());
+                foundUser.setCountry(tCountry);
+                foundUser.setGender(tGender);
+                foundUser.setUserName(tUsername);
+                foundUser.setFullName(tFullname);
+                foundUser.setStatus(Constants.STAT_REGISTERED);
+                foundUser.setUserID(infoFromRegister.getUid());
+                handler.UpdateUser(foundUser, SetUpActivity.this, new FireBaseUserDataHandler.UpdateStatus() {
                     @Override
                     public void DataIsLoaded() {
                         SendToMainActivity();
@@ -171,6 +180,13 @@ public class SetUpActivity extends AppCompatActivity {
                     }
                 });
 
+            }
+
+            @Override
+            public void Error() {
+
+            }
+        });
     }
 
 
@@ -224,15 +240,15 @@ public class SetUpActivity extends AppCompatActivity {
             loadingBar.setCanceledOnTouchOutside(true); // prevent user from touching the outside to close it
             if(resultCode == RESULT_OK){
                 Uri resultUri = result.getUri();
+                editDP.setImageURI(resultUri);
+                String [] directoryFolder = {"Users"};
                 handler.SaveProfileImage(firebaseAuth.getCurrentUser().getUid(), resultUri, new FireBaseUserDataHandler.UpdateStatus() {
                     @Override
                     public void DataIsLoaded() {
                         handler.GetUserDataByUI(firebaseAuth.getCurrentUser().getUid(), new FireBaseUserDataHandler.DataStatus() {
                             @Override
                             public void DataIsLoaded(UserAccount foundUser) {
-                               //Picasso.get()
-                                Intent selfIntent = new Intent(SetUpActivity.this, SetUpActivity.class);
-                                startActivity(selfIntent);
+
                             }
 
                             @Override

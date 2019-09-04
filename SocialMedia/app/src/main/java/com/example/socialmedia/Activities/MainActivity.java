@@ -1,10 +1,16 @@
-package com.example.socialmedia;
+package com.example.socialmedia.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.socialmedia.Fragments.FeedFragment;
+import com.example.socialmedia.Fragments.Friends.FriendsFragment;
+import com.example.socialmedia.Handlers.FireBaseUserDataHandler;
+import com.example.socialmedia.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -19,8 +25,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();
-
-
     }
 
     private void SendUserToRegisterActivity() {
@@ -44,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            Log.d("FIX", currentUser.getEmail());
             SetUpDataFromDB();
         }
 
@@ -61,4 +64,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void insertFeedView(View view) {
+        Log.d("FIX", "Tried to insert feed");
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_activity_container,new FeedFragment() ).commit();
+    }
+    public void insertFriendsView(View view) {
+        Log.d("FIX", "Tried to insert Friend screen");
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_activity_container,new FriendsFragment() ).commit();
+    }
 }

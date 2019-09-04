@@ -14,14 +14,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:fullBackupContent="true">
-        <activity android:name=".SetUpActivity" />
-        <activity android:name=".RegisterDetailsActivity" />
-        <activity android:name=".RegisterActivity" />
+        <activity android:name=".Activities.SetUpActivity" />
+        <activity android:name=".Activities.RegisterDetailsActivity" />
+        <activity android:name=".Activities.RegisterActivity" />
         <activity
-            android:name=".ProfileAndSettings"
+            android:name=".Activities.ProfileAndSettings"
             android:label="@string/title_activity_profile_and_settings"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".Activities.MainActivity"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
