@@ -21,20 +21,10 @@ import java.util.ArrayList;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder>{
-
     private Context context;
     private ArrayList<PostObject> ListOfPosts;
-/*
-    private ImageView postImage;
-    private TextView userName ;
-    private TextView message ;
-    private TextView dateAndTime ;
-    private FireBaseUserDataHandler dataHandler = new FireBaseUserDataHandler();
-    private CircleImageView profileImage;
-    private String url ;
-    private String userNameOfUser ;*/
 
-    public PostsAdapter(Context context, ArrayList<PostObject> ListOfPosts) {
+    public PostsAdapter(Context context, ArrayList<PostObject> ListOfPosts ) {
         this.context = context;
         this.ListOfPosts = ListOfPosts;
     }
@@ -53,17 +43,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
         // we cannot make async task in this method. This is pretty much a hack solution
         PostObject object = ListOfPosts.get(position);
         UserAccount account = object.getOptionalAccountLink();
-        String userName = account.getUserName();
-        String dpUrl = account.getDPUrl();
-
-        if(dpUrl!= null && !dpUrl.isEmpty() ){
-            Picasso.get().load(dpUrl).into( holder.profileImage);
-        }
-        if(userName!= null && !userName.isEmpty()) {
-            holder.userName.setText(userName);
-        }
-
         if (object != null) {
+            String dateToDisplay = object.getDate();
             String messageByPost = object.getMessage();
             String url = object.getImgUrl();
             if(messageByPost != null && !messageByPost.isEmpty() ){
@@ -77,6 +58,18 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
             }
             else{
                 holder.postImage.setVisibility(View.GONE);
+            }
+            holder.dateAndTime.setText(dateToDisplay);
+
+        }
+        if(account != null){
+            String userName = account.getUserName();
+            String dpUrl = account.getDPUrl();
+            if(dpUrl!= null && !dpUrl.isEmpty() ){
+                Picasso.get().load(dpUrl).into( holder.profileImage);
+            }
+            if(userName!= null && !userName.isEmpty()) {
+                holder.userName.setText(userName);
             }
 
         }
@@ -96,8 +89,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
         private TextView dateAndTime ;
         private FireBaseUserDataHandler dataHandler = new FireBaseUserDataHandler();
         private CircleImageView profileImage;
-        private String url = null ;
-        private String userNameOfUser = null;
 
         public MyViewHolder(View itemView) { // prepare the view. This is different from an array adapter
             super(itemView);

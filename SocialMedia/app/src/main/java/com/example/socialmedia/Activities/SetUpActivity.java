@@ -159,9 +159,13 @@ public class SetUpActivity extends AppCompatActivity {
             @Override
             public void DataIsLoaded(UserAccount foundUser) {
                 String email = infoFromRegister.getEmail();
-                if(email != null)
-                foundUser.setEmail(email);
-                foundUser.setPhone(infoFromRegister.getPhoneNumber());
+                String phoneNo = infoFromRegister.getPhoneNumber();
+                if(email != null && !email.isEmpty()) {
+                    foundUser.setEmail(email);
+                }
+                if(phoneNo != null){
+                    foundUser.setPhone(infoFromRegister.getPhoneNumber());
+                }
                 foundUser.setCountry(tCountry);
                 foundUser.setGender(tGender);
                 foundUser.setUserName(tUsername);

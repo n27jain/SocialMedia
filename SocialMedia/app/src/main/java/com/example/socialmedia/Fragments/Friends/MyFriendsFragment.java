@@ -3,35 +3,45 @@ package com.example.socialmedia.Fragments.Friends;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.socialmedia.Handlers.FireBaseUserDataHandler;
+import com.example.socialmedia.Adapters.FriendsAdapter;
+import com.example.socialmedia.Constants;
 import com.example.socialmedia.Handlers.FireBaseUserFriendsHandler;
 import com.example.socialmedia.Objects.UserAccount;
 import com.example.socialmedia.R;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class MyFriendsFragment extends Fragment {
 
     private String resultUri = null;
-    private String TAG = "FeedFragment";
+    private String TAG = "MyFriends";
     private ProgressDialog loadingBar;
+
     private RecyclerView friendsListRecyclerView;
+    private FriendsAdapter friendsAdapter;
     private FireBaseUserFriendsHandler friendsHandler;
-    private ArrayList<String> ListOfFriends;
     private ArrayList<UserAccount> UserAccountsFromFriendId;
+    private EditText  searchFriendEditText;
+    private String lastSearch = "";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,26 +58,49 @@ public class MyFriendsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        friendsListRecyclerView = view.findViewById(R.id.friendsListRecyclerView);
         friendsHandler = new FireBaseUserFriendsHandler(FirebaseAuth.getInstance().getUid()){
             @Override
-            public void AllUserAccountsInitialized(){
+            public void onCompleteFriendsUserAccountsStored(ArrayList<UserAccount> foundFriendsAccounts){
+                UserAccountsFromFriendId = foundFriendsAccounts;
                 initAdapter();
             }
         };
+
+        UserAccountsFromFriendId = new ArrayList<UserAccount>();
         friendsHandler.getListOfFriendsUserID();
+
         loadingBar = new ProgressDialog(getActivity());
-        initAdapter();
+
+
+        friendsListRecyclerView = view.findViewById(R.id.friendsListRecyclerView);
+        searchFriendEditText = view.findViewById(R.id.searchFriendEditText);
+        searchFriendEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        //TODO: search through friends
+        /*searchFriendEditText .setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                String search = searchFriendEditText .getText().toString();
+                switch (actionId) {
+                    case EditorInfo.IME_ACTION_DONE:
+                        if(lastSearch != search ) {
+                            friendsHandler.SearchForFriendsByUserName(searchFriendEditText .getText().toString());
+                        }
+                        return true;
+                    case EditorInfo.IME_ACTION_NEXT:
+                    case EditorInfo.IME_ACTION_PREVIOUS:
+                        return true;
+                }
+                return false;
+            }
+        });*/
     }
 
     private void initAdapter() {
-        //TODO: Create a list of users based on friends list
-        // Send in the User accounts to the adapter to be processed into view.
-        // What we need to display is DP, username, real name, #about, gender, country
-        FireBaseUserDataHandler dataHandler = new FireBaseUserDataHandler();
-        ListOfFriends= friendsHandler.getListOfFriends();
-
-
+       /* UserAccountsFromFriendId = friendsHandler.getUserAccountsFromFriendId();*/
+        friendsAdapter = new FriendsAdapter(getContext(),UserAccountsFromFriendId, Constants.FRIEND_BUTTON_REMOVE);
+        friendsListRecyclerView.setAdapter(friendsAdapter);
+        friendsListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        loadingBar.dismiss();
     }
 
     @Override

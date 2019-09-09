@@ -30,7 +30,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 import java.util.Objects;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterOrSignInActivity extends AppCompatActivity {
 
 
     //TODO: Add FB authentication
@@ -67,7 +67,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onConnectionFailed(@NonNull ConnectionResult connectionResult) { // we need to make sure google IS ACCESSIBLE
 
-                Toast.makeText(RegisterActivity.this,"Connecting to GOOGLE failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegisterOrSignInActivity.this,"Connecting to GOOGLE failed", Toast.LENGTH_SHORT).show();
             }
         })
         .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
@@ -103,7 +103,7 @@ public class RegisterActivity extends AppCompatActivity {
                     if(task.isSuccessful()) {
                         loadingBar.dismiss();
                         UpdateUIAndSendToNextActivity(null);
-                        Toast.makeText(RegisterActivity.this, "Successful Registration!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterOrSignInActivity.this, "Successful Registration!", Toast.LENGTH_SHORT).show();
                         SendToSetUpActivity();
                         SendToSetUpActivity();// Success log in. Send to Main activity
 
@@ -118,7 +118,7 @@ public class RegisterActivity extends AppCompatActivity {
                         else {
 
                             Log.d("FIX", Objects.requireNonNull(message));
-                            Toast.makeText(RegisterActivity.this, message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterOrSignInActivity.this, message, Toast.LENGTH_SHORT).show();
                         }
                         loadingBar.dismiss();
                     }
@@ -144,7 +144,7 @@ public class RegisterActivity extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.e("FIX", "signInWithEmail:failure", task.getException());
-                            Toast.makeText(RegisterActivity.this, "Account Exists. Invalid Password!",
+                            Toast.makeText(RegisterOrSignInActivity.this, "Account Exists. Invalid Password!",
                                     Toast.LENGTH_SHORT).show();
                           //  UpdateUIAndSendToNextActivity(null);
                         }
@@ -154,13 +154,13 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
     private void SendToSetUpActivity() {
-        Intent registerIntent = new Intent (RegisterActivity.this, SetUpActivity.class);
+        Intent registerIntent = new Intent (RegisterOrSignInActivity.this, SetUpActivity.class);
         registerIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(registerIntent);
         finish(); // clear the current activities visuals
     }
     private void SendToMainActivity(){
-        Intent registerIntent = new Intent (RegisterActivity.this, MainActivity.class);
+        Intent registerIntent = new Intent (RegisterOrSignInActivity.this, MainActivity.class);
         registerIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(registerIntent);
         finish(); // clear the current activities visuals
@@ -170,7 +170,7 @@ public class RegisterActivity extends AppCompatActivity {
     //google sign in
         public void GoogleSignIn(View view) {
 
-            Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleSignInClient);
+            Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleSignInClient) ;
             startActivityForResult(signInIntent, RC_SIGN_IN);
         }
 
@@ -208,7 +208,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.e(gTag, "signInWithCredential:failure", task.getException());
-                                    Toast.makeText(RegisterActivity.this, Objects.requireNonNull(task.getException()).toString(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(RegisterOrSignInActivity.this, Objects.requireNonNull(task.getException()).toString(), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -225,9 +225,7 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void DataIsLoaded(UserAccount foundUser) {
                             if(foundUser != null) {
-                                Log.d("DATA", foundUser.getUserName());
                                 int status = foundUser.getStatus();
-                                Log.d("DATA", "Status is: "+ status);
                                 switch (status) {
                                     case 0: // the account is new
                                         SendToSetUpActivity();
@@ -238,10 +236,10 @@ public class RegisterActivity extends AppCompatActivity {
                                         finish();
                                         break;
                                     case 2:// user is banned
-                                        Toast.makeText(RegisterActivity.this, "This account is currently banned", Toast.LENGTH_SHORT).show(); // TODO: create solution for banned account
+                                        Toast.makeText(RegisterOrSignInActivity.this, "This account is currently banned", Toast.LENGTH_SHORT).show(); // TODO: create solution for banned account
                                         break;
                                     case 3:// there is an error with this account
-                                        Toast.makeText(RegisterActivity.this, "There is an error with your account. We apologize for the inconvenience. Please try again later.", Toast.LENGTH_SHORT).show(); // TODO: create crashalytics for this
+                                        Toast.makeText(RegisterOrSignInActivity.this, "There is an error with your account. We apologize for the inconvenience. Please try again later.", Toast.LENGTH_SHORT).show(); // TODO: create crashalytics for this
                                         break;
                                 }
                             }

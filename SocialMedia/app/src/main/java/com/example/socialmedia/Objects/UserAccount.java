@@ -5,9 +5,9 @@ import java.util.Map;
 
 public class UserAccount {
 
-    private String UserName , FullName, Email, Phone , UserID ;
+    private String UserName = null , FullName = null, Email = null, Phone = null , UserID = null ;
 
-    private String DPUrl;
+    private String DPUrl = null;
 
     private int Country, Gender, Status;
 
@@ -55,10 +55,7 @@ public class UserAccount {
     }
 
     public String getUserName() {
-        if(UserName!= null)
             return UserName;
-        else
-            return "UNKNOWN UserName";
     }
 
     public void setUserName(String userName) {
@@ -66,10 +63,7 @@ public class UserAccount {
     }
 
     public String getFullName() {
-        if(FullName!= null)
             return FullName;
-        else
-            return "UNKNOWN NAME";
     }
 
     public void setFullName(String fullName) {
@@ -77,10 +71,7 @@ public class UserAccount {
     }
 
     public String getEmail() {
-        if(Email!= null)
             return Email;
-        else
-            return "UNKNOWN Email";
     }
 
     public void setEmail(String email) {
@@ -88,20 +79,14 @@ public class UserAccount {
     }
 
     public String getPhone() {
-        if(Phone!= null)
             return Phone;
-        else
-            return "UNKNOWN Phone";
     }
 
     public void setPhone(String phone) {
         Phone = phone;
     }
     public String getDPUrl() {
-        if(DPUrl!= null)
             return DPUrl;
-        else
-            return "UNKNOWN DPUrl";
     }
 
     public void setDPUrl(String DPUrl) {
@@ -140,12 +125,19 @@ public class UserAccount {
         userMap.put("UserID",UserID);
         userMap.put("UserName",UserName);
         userMap.put("FullName",FullName);
-        userMap.put("Email",Email);
-        userMap.put("DPUrl", DPUrl);
+        if(Email!= null && !Email.isEmpty()){
+            userMap.put("Email",Email);
+        }
+        if(DPUrl!= null && !DPUrl.isEmpty()){
+            userMap.put("DPUrl", DPUrl);
+        }
+        if(Phone!= null && !Phone.isEmpty()){
+            userMap.put("Phone No",Phone);
+        }
         userMap.put("Country",Country );
         userMap.put("Gender",Gender);
         userMap.put("Status",Status);
-        userMap.put("Phone No",Phone);
+
         return userMap;
     }
 

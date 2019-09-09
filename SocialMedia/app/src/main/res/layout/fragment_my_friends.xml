@@ -16,16 +16,10 @@
         android:background="@color/colorAccent"
         android:paddingTop="25dp"
         android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
 
-            android:layout_marginLeft="50dp"
-            android:text="A-Z"/>
         <EditText
             android:id="@+id/searchFriendEditText"
             android:layout_width="fill_parent"
-            android:layout_marginLeft="50dp"
             android:layout_height="50dp"
             android:background="@drawable/round_register_button"
             android:drawableStart="@drawable/search"
@@ -38,9 +32,11 @@
             />
 
     </LinearLayout>
+
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
             android:fillViewport="true">
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/friendsListRecyclerView"

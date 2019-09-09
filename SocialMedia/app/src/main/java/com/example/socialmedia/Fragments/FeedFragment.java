@@ -23,13 +23,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.socialmedia.Adapters.PostsAdapter;
 import com.example.socialmedia.Handlers.FireBasePostHandler;
 import com.example.socialmedia.Objects.PostObject;
-import com.example.socialmedia.Objects.UserAccount;
 import com.example.socialmedia.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ServerValue;
 import com.theartofdev.edmodo.cropper.CropImage;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Calendar;
+import java.util.SimpleTimeZone;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -94,14 +96,11 @@ public class FeedFragment extends Fragment {
     }
 
     private void initAdapter(){
-         loadingBar.setTitle("Loading Posts...");
-         loadingBar.show();
-         loadingBar.setCanceledOnTouchOutside(false); // prevent user from touching the outside to close it*/
-         ListOfPosts = postHandler.getCurrentUsersPosts();
+         ListOfPosts = postHandler.getCurrentUserAndFriendsPosts();
          postsAdapter = new PostsAdapter(getContext(),ListOfPosts);
          allPostsRecyclerView.setAdapter(postsAdapter);
          allPostsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-         loadingBar.dismiss();
+
     }
 
 
@@ -118,14 +117,13 @@ public class FeedFragment extends Fragment {
                 inputUri = Uri.parse(resultUri);
             }
             if(resultUri != null || !message.isEmpty()) {
-
-               /* loadingBar.setTitle("Saving Post...");
-                loadingBar.show();
-                loadingBar.setCanceledOnTouchOutside(true); // prevent user from touching the outside to close it*/
-
+                Calendar calendar = Calendar.getInstance();
+                SimpleDateFormat currentDate = new SimpleDateFormat("yyy-MM-dd-");
                 postObject.setMessage(message);
                 postObject.setUserID(FirebaseAuth.getInstance().getUid());
                 postObject.setPostID(postHandler.getMaxId());
+                postObject.setTimeCreated(System.currentTimeMillis()/1000);
+
                 postHandler.CreatePost(postObject, inputUri, new FireBasePostHandler.UpdateStatus() {
                     @Override
                     public void DataIsLoaded() {
@@ -161,7 +159,7 @@ public class FeedFragment extends Fragment {
     private OnClickListener insertImageButtonOnClickListener = new OnClickListener() {
         @Override
         public void onClick(View view) {
-            //TODO: Make the ability for user to upload image. We need to get context of our activity
+            // Make the ability for user to upload image. We need to get context of our activity
             CropImage.activity()
                     .start((Activity) getContext(), FeedFragment.this);
 

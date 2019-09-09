@@ -28,4 +28,8 @@ public class Constants {
     public static final int STAT_BANNED = 2;
     public static final int STAT_ERROR= 3;
 
+    //TYPE of Friend View
+    public static final int FRIEND_BUTTON_ADD = 1;
+    public static final int FRIEND_BUTTON_REMOVE = 2;
+
 }

@@ -64,10 +64,11 @@ public class ProfileAndSettings extends AppCompatActivity {
                 @Override
                 public void DataIsLoaded(UserAccount foundUser) {
                     if (foundUser != null) {
-                        Log.d(sTag, foundUser.getUserName());
-                        userNameView.setText(foundUser.getUserName());
+                        String userName = foundUser.getUserName();
+                        if(userName != null) {
+                            userNameView.setText(foundUser.getUserName());
+                        }
                         String url = foundUser.getDPUrl();
-                        Log.d(sTag, url);
                         if(url!= null){
                             Picasso.get().load(url).into(circleProfileImageView);
                         }

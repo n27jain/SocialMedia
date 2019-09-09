@@ -29,8 +29,7 @@
             android:inputType="text"
             android:padding="10dp"
             android:selectAllOnFocus="true"
-            android:textColor="@color/black"
-            />
+            android:textColor="@color/black" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/friendsListRecyclerView"

@@ -17,6 +17,8 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
+    //TODO: On back button pressed return to the last fragment
+
     private FirebaseAuth mAuth;
     private FireBaseUserDataHandler handle;
 
@@ -25,10 +27,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();
+
     }
 
     private void SendUserToRegisterActivity() {
-        Intent registerIntent = new Intent (MainActivity.this, RegisterActivity.class);
+        Intent registerIntent = new Intent (MainActivity.this, RegisterOrSignInActivity.class);
         registerIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(registerIntent);
         finish(); // clear the current activities visuals
