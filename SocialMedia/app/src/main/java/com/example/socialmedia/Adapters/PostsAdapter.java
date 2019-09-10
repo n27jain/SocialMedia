@@ -30,7 +30,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
         this.context = context;
         Collections.sort(ListOfPosts, new Comparator<PostObject>() {
             @Override public int compare(PostObject p1, PostObject p2) {
-                return p2.getDate().compareTo(p1.getDate()); // Ascending
+                return p1.getTimeCreated().compareTo(p2.getTimeCreated()); // Ascending
             }
         });
         this.ListOfPosts = ListOfPosts;

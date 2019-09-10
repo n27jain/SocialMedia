@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -102,7 +103,7 @@ public class FeedFragment extends Fragment {
 
          postsAdapter = new PostsAdapter(getContext(),ListOfPosts);
          allPostsRecyclerView.setAdapter(postsAdapter);
-         allPostsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+         allPostsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL,true));
 
     }
 
