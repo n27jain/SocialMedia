@@ -1,4 +1,4 @@
-package com.example.socialmedia.Fragments;
+package com.example.socialmedia.Fragments.Chat;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -26,18 +26,16 @@ import com.example.socialmedia.Handlers.FireBasePostHandler;
 import com.example.socialmedia.Objects.PostObject;
 import com.example.socialmedia.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ServerValue;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.SimpleTimeZone;
 
 import static android.app.Activity.RESULT_OK;
 
 
-public class FeedFragment extends Fragment {
+public class ChatFriendsListFragment extends Fragment {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 
@@ -165,7 +163,7 @@ public class FeedFragment extends Fragment {
         public void onClick(View view) {
             // Make the ability for user to upload image. We need to get context of our activity
             CropImage.activity()
-                    .start((Activity) getContext(), FeedFragment.this);
+                    .start((Activity) getContext(), ChatFriendsListFragment.this);
 
         }
     };

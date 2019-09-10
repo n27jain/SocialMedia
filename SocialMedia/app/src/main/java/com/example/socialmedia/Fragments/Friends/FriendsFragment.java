@@ -48,6 +48,7 @@ public class FriendsFragment extends Fragment {
         myFriendsButton = view.findViewById(R.id.myFriendsButton);
         findFriendsButton.setOnClickListener(findFriendsButtonOnClickListener);
         myFriendsButton.setOnClickListener(myFriendsButtonOnClickListener);
+        getFragmentManager().beginTransaction().replace(R.id.fragment_friends_container,new MyFriendsFragment()).commit();
 
     }
 

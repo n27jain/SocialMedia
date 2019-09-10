@@ -5,6 +5,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.socialmedia.Adapters.PostsAdapter;
 import com.example.socialmedia.Objects.PostObject;
 import com.example.socialmedia.Objects.UserAccount;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -20,6 +21,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Objects;
 
@@ -75,7 +78,7 @@ public class FireBasePostHandler {
 
                 allFoundFriendsAccounts = foundFriendsAccounts;
                 int finishCounting = allFoundFriendsAccounts.size();
-                countDownBeforeInitialize = 1 ;
+                countDownBeforeInitialize = 0 ;
                 for(UserAccount i : allFoundFriendsAccounts){
                     DatabaseReference newUsersPostsDB = postsDB.child(i.getUserID());
                     newUsersPostsDB.addValueEventListener(valueEventListener);
@@ -96,11 +99,18 @@ public class FireBasePostHandler {
                 maxId = dataSnapshot.getChildrenCount() + 1;
                 for (DataSnapshot i : dataSnapshot.getChildren()) {
                     PostObject object = i.getValue(PostObject.class);
-                    if (!currentUserAndFriendsPosts.contains(object)) {
+                    boolean alreadyExists = false;
+                    for(PostObject k : currentUserAndFriendsPosts){
+                        if(object.getPostID() == k.getPostID()){
+                            alreadyExists = true;
+                            break;
+                        }
+                    }
+                    if (!alreadyExists) {
                         //TODO: CHECK HERE
-
                         object.setOptionalAccountLink(CurrentUserAccount);
                         currentUserAndFriendsPosts.add(object);
+
                     }
                 }
             }
@@ -132,7 +142,7 @@ public class FireBasePostHandler {
                     }
                 }
                 countDownBeforeInitialize++;
-                if(countDownBeforeInitialize == allFoundFriendsAccounts.size()){ // we have processed the last friend
+                if(countDownBeforeInitialize >= allFoundFriendsAccounts.size()){ // we have processed the last friend
                     UpdatePostsAdapter();
                     countDownBeforeInitialize = 0;
                 }
@@ -194,6 +204,7 @@ public class FireBasePostHandler {
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
                             Log.d("DATABASE", "Successful in trying to gain data!"); // Find out why we need this twice!
+
                             maxId++;
                         }else {
                             Log.e("DATABASE", Objects.requireNonNull(Objects.requireNonNull(task.getException()).getMessage())); // Find out why we need this twice!

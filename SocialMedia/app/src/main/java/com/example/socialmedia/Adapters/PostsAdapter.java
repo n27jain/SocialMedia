@@ -17,6 +17,8 @@ import com.example.socialmedia.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -26,8 +28,15 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
 
     public PostsAdapter(Context context, ArrayList<PostObject> ListOfPosts ) {
         this.context = context;
+        Collections.sort(ListOfPosts, new Comparator<PostObject>() {
+            @Override public int compare(PostObject p1, PostObject p2) {
+                return p2.getDate().compareTo(p1.getDate()); // Ascending
+            }
+        });
         this.ListOfPosts = ListOfPosts;
+        //ListOfPosts
     }
+
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View convertView = LayoutInflater.from(context).inflate
@@ -98,65 +107,11 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
             postImage = itemView.findViewById(R.id.postOptionalImage);
             profileImage = itemView.findViewById(R.id.circleProfileImageView);
 
+
         }
     }
 }
 
 
 
-
-
-
-
-
-    /*private View initView(int position, View convertView, ViewGroup parent){
-        if(convertView == null){
-            convertView = LayoutInflater.from(getContext()).inflate
-                    (R.layout.posts_layout,parent,false);
-        }
-        userName = convertView.findViewById(R.id.userNameTextView);
-        message = convertView.findViewById(R.id.messageTextView);
-        dateAndTime = convertView.findViewById(R.id.dateTime);
-        postImage = convertView.findViewById(R.id.postOptionalImage);
-        profileImage = convertView.findViewById(R.id.circleProfileImageView);
-
-        PostObject object = getItem(position);
-        dataHandler.GetUserDataByUI(object.getUserID(), new FireBaseUserDataHandler.DataStatus() {
-            @Override
-            public void DataIsLoaded(UserAccount foundUser) {
-                url = foundUser.getDPUrl();
-                userNameOfUser = foundUser.getUserName();
-                userName.setText(userNameOfUser);
-                if(url!= null){
-                    Picasso.get().load(url).into(profileImage);
-                }
-            }
-            @Override
-            public void Error() {
-
-            }
-        });
-
-        if (object != null) {
-            String messageByPost = object.getMessage();
-            String url = object.getImgUrl();
-            if(! messageByPost.isEmpty() ){
-                message.setText(messageByPost);
-            }
-            else{
-                message.setVisibility(View.GONE);
-            }
-            if(! url.isEmpty()){
-                Picasso.get().load(url).into(postImage);
-            }
-            else{
-                postImage.setVisibility(View.GONE);
-            }
-
-        }
-        //TODO: Make sure the get user stuff is in async with the return.
-        // we dont want it to return an object without image.
-        return convertView;
-
-    }*/
 
