@@ -47,6 +47,19 @@
 
     </LinearLayout>
 
+    <FrameLayout
+        android:id="@+id/main_activity_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="68dp"
+        android:layout_marginEnd="1dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
@@ -70,17 +83,6 @@
             android:onClick="goToSettings"
             android:text="Settings" />
     </LinearLayout>
-
-    <FrameLayout
-        android:id="@+id/main_activity_container"
-        android:layout_width="395dp"
-        android:layout_height="611dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="1dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

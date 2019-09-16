@@ -78,13 +78,14 @@ public class FeedFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         String userId = FirebaseAuth.getInstance().getUid();
         allPostsRecyclerView = view.findViewById(R.id.allPostsRecyclerView);
-        postHandler = new FireBasePostHandler(userId){
-            @Override
-            public void UpdatePostsAdapter() {
-                initAdapter();
-            }
-        };
-
+        if(userId!=null) {
+            postHandler = new FireBasePostHandler(userId) {
+                @Override
+                public void UpdatePostsAdapter() {
+                    initAdapter();
+                }
+            };
+        }
         postMessage = view.findViewById(R.id.newPostMessage);
         uploaded_image = view.findViewById(R.id.uploaded_image);
 
