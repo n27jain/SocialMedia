@@ -85,7 +85,7 @@ Please make sure to update tests as appropriate.
 ## License
 I need to create a licence here when crucial parts of the app are complete.
 
-[Android Studio]: <https://https://developer.android.com/>
+[Android Studio]: <https://developer.android.com/studio>
 [Firebase]: <https://firebase.google.com/>
 [Picasso]: <https://square.github.io/picasso/>
 [Android Image Cropper]: <https://github.com/ArthurHub/Android-Image-Cropper>
