@@ -69,13 +69,7 @@ This fragment accesses the firebase db to find all posts by the user and their f
 
 This fragment is accessed once friend button is pressed in the ```MainActivity.java``` file. This fragment contains 2 fragments that can be accessed by pressing either the my friends button or find my friends button. My friends screen displays all your friends that you can filter though with the search bar. Find my friends screen will allow the user to find their friend by inputting the username of their friend. After pressing ADD, the account will disappear from the list of search results. 
 
-```python
-import foobar
 
-foobar.pluralize('word') # returns 'words'
-foobar.pluralize('goose') # returns 'geese'
-foobar.singularize('phenomena') # returns 'phenomenon'
-```
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
