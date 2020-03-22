@@ -13,7 +13,8 @@ This project is a shell social media app that is yet to be named. Currently it i
 
 ## Objectives
 
-This app's primary focus is to create an interesting and private social media app for the developer and his friends. The future focus is to release the app for all users.
+This app's primary was focus to create an interesting and private social media app for the developer and his friends. The future focus is to release the app for all users. Right now it is expected to be a social expirement to see who is will become the most popular person in the platform where there are limited and restricited users.
+
 There are 5 phases to be implemented for the completion of the project.
 
 **Phase 1:** Create the shell App with Register/Sign-In Activity, Posts activity, messenger, friends, settings, and notifications.
@@ -25,7 +26,16 @@ There are 5 phases to be implemented for the completion of the project.
 **Phase 4:** Induce a Karma system into the social media app and make it competitive. 
 
 **Phase 5:** Secure app and then release. (Limit Users to save data consumption).
- 
+
+**NEW PHASE 6:** Release the social expirement game.
+
+## Rules of the game:
+  - Room of 100 people
+  - Each person can only vote 5 times a day and only once per post
+  - No one can see who vote for whom, and once a vote has been placed the person who placed it cannot change it and cannot view their vote. 
+  - Karma system is put in place to rank the top player
+  - At the end of the month the person with the most karma gets $100
+
 ## Application Walkthrough
 
 ### RegisterOrSignInActivity.java 
