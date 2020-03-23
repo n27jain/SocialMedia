@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/backgroundColor"
     tools:context=".Fragments.FeedFragment">
 
     <LinearLayout
@@ -17,6 +18,8 @@
             android:text="Create a new post"
             android:textAlignment="center"
             android:textSize="28sp"
+            android:textColor="@color/subTextColor"
+
             android:textStyle="bold" />
 
         <Button
@@ -24,6 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:textSize="14sp"
+            android:background="@color/buttonTextColor"
             android:text="Insert Image" />
 
         <ImageView
@@ -37,8 +41,9 @@
             android:id="@+id/newPostMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Whats this about?"
+            android:hint="@string/post_placement_mock"
             android:maxLines="8"
+            android:textColorHint="@color/subTextColor"
             android:inputType="textMultiLine" />
 
         <Button
@@ -52,10 +57,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fillViewport="true">
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/allPostsRecyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/allPostsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
         </androidx.core.widget.NestedScrollView>
     </LinearLayout>

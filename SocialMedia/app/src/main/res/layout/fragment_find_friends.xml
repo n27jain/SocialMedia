@@ -8,7 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorAccent"
+        android:background="@color/backgroundColor"
         android:orientation="vertical">
 
         <EditText
@@ -29,7 +29,7 @@
             android:inputType="text"
             android:padding="10dp"
             android:selectAllOnFocus="true"
-            android:textColor="@color/black" />
+            android:textColor="@color/subTextColor" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/friendsListRecyclerView"

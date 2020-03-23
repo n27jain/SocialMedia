@@ -32,27 +32,20 @@ import java.util.Objects;
 
 public class RegisterOrSignInActivity extends AppCompatActivity {
 
-
     //TODO: Add FB authentication
-
     private FireBaseUserDataHandler handler;
     private FirebaseAuth firebaseAuth;
-
     private static final int RC_SIGN_IN = 1;
     private EditText email , password;
     private ProgressDialog loadingBar;
     private GoogleApiClient mGoogleSignInClient;
     private static String gTag = "GOOGLE";
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
         firebaseAuth = FirebaseAuth.getInstance();
-
         email = findViewById(R.id.username);
         password = findViewById(R.id.password);
         loadingBar = new ProgressDialog(this);
@@ -100,13 +93,13 @@ public class RegisterOrSignInActivity extends AppCompatActivity {
             firebaseAuth.createUserWithEmailAndPassword(getEmail, getPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
+
                     if(task.isSuccessful()) {
                         loadingBar.dismiss();
                         UpdateUIAndSendToNextActivity(null);
                         Toast.makeText(RegisterOrSignInActivity.this, "Successful Registration!", Toast.LENGTH_SHORT).show();
                         SendToSetUpActivity();
                         SendToSetUpActivity();// Success log in. Send to Main activity
-
                     }
                     else { // any error explained
                         String message = Objects.requireNonNull(task.getException()).getMessage();
@@ -123,14 +116,11 @@ public class RegisterOrSignInActivity extends AppCompatActivity {
                         loadingBar.dismiss();
                     }
                 }
-
-
             });
         }
 
     }
     private void PerformSignIn(String inEmail, String inPass) {
-
         firebaseAuth.signInWithEmailAndPassword(inEmail, inPass)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -139,7 +129,6 @@ public class RegisterOrSignInActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("FIX", "signInWithEmail:success");
                            // SendToSetUpActivity();
-
                             UpdateUIAndSendToNextActivity(null);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -148,8 +137,6 @@ public class RegisterOrSignInActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
                           //  UpdateUIAndSendToNextActivity(null);
                         }
-
-                        // ...
                     }
                 });
     }
@@ -220,7 +207,6 @@ public class RegisterOrSignInActivity extends AppCompatActivity {
 
     private void UpdateUIAndSendToNextActivity(FirebaseUser user) {
                 if(user != null){
-
                     handler.GetUserDataByUI(user.getUid(), new FireBaseUserDataHandler.DataStatus() {
                         @Override
                         public void DataIsLoaded(UserAccount foundUser) {
@@ -249,7 +235,6 @@ public class RegisterOrSignInActivity extends AppCompatActivity {
                             }
                         }
 
-
                         @Override
                         public void Error() {
                             Log.e("DATA", "Data was not loaded properly.");
@@ -259,8 +244,6 @@ public class RegisterOrSignInActivity extends AppCompatActivity {
                 else{
                     Log.e("DATA", "User was not a valid user");
                 }
-
-
     }
 
 }
