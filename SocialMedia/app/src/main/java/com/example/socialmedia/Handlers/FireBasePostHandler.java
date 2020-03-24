@@ -35,8 +35,7 @@ public class FireBasePostHandler {
     private long maxId = 0;
     private StorageReference UserPostImageStorageReference;
     String PostTAG = "POSTTAG";
-
-    private  ArrayList<PostObject> currentUserAndFriendsPosts;
+    private ArrayList<PostObject> currentUserAndFriendsPosts;
     private UserAccount CurrentUserAccount;
     private int countDownBeforeInitialize = 0;
 
@@ -46,8 +45,9 @@ public class FireBasePostHandler {
         return maxId;
     }
 
-    public interface UpdateStatus{
+    public interface UpdateStatus {
         void DataIsLoaded();
+
         void Error();
     }
 
@@ -72,18 +72,18 @@ public class FireBasePostHandler {
         selectUsersPostsDB = postsDB.child(UserId); // this database contains all of the posts of the current user.
         selectUsersPostsDB.addValueEventListener(valueEventListenerForCurrentUser); // this should retrieve every post from the user.
 
-        userFriendsHandler = new FireBaseUserFriendsHandler(UserId){
+        userFriendsHandler = new FireBaseUserFriendsHandler(UserId) {
             @Override
             public void onCompleteFriendsUserAccountsStored(ArrayList<UserAccount> foundFriendsAccounts) {
 
                 allFoundFriendsAccounts = foundFriendsAccounts;
                 int finishCounting = allFoundFriendsAccounts.size();
-                countDownBeforeInitialize = 0 ;
-                for(UserAccount i : allFoundFriendsAccounts){
+                countDownBeforeInitialize = 0;
+                for (UserAccount i : allFoundFriendsAccounts) {
                     DatabaseReference newUsersPostsDB = postsDB.child(i.getUserID());
                     newUsersPostsDB.addValueEventListener(valueEventListener);
                 }
-               // UpdatePostsAdapter();
+                // UpdatePostsAdapter();
             }
         };
         userFriendsHandler.getListOfFriendsUserID(); // trigger the getUserListOfFriends. j
@@ -100,8 +100,8 @@ public class FireBasePostHandler {
                 for (DataSnapshot i : dataSnapshot.getChildren()) {
                     PostObject object = i.getValue(PostObject.class);
                     boolean alreadyExists = false;
-                    for(PostObject k : currentUserAndFriendsPosts){
-                        if(object.getPostID() == k.getPostID()){
+                    for (PostObject k : currentUserAndFriendsPosts) {
+                        if (object.getPostID() == k.getPostID()) {
                             alreadyExists = true;
                             break;
                         }
@@ -113,8 +113,7 @@ public class FireBasePostHandler {
 
                     }
                 }
-            }
-            else {
+            } else {
                 maxId = 1;
             }
         }
@@ -132,8 +131,8 @@ public class FireBasePostHandler {
                     PostObject object = i.getValue(PostObject.class);
                     if (!currentUserAndFriendsPosts.contains(object)) {
                         //TODO: CHECK HERE
-                        for(UserAccount j: allFoundFriendsAccounts){ //TODO: Warning this is inefficient
-                            if(j.getUserID() .equals( object.getUserID())){
+                        for (UserAccount j : allFoundFriendsAccounts) { //TODO: Warning this is inefficient
+                            if (j.getUserID().equals(object.getUserID())) {
                                 object.setOptionalAccountLink(j);
                                 break;
                             }
@@ -142,12 +141,11 @@ public class FireBasePostHandler {
                     }
                 }
                 countDownBeforeInitialize++;
-                if(countDownBeforeInitialize >= allFoundFriendsAccounts.size()){ // we have processed the last friend
+                if (countDownBeforeInitialize >= allFoundFriendsAccounts.size()) { // we have processed the last friend
                     UpdatePostsAdapter();
                     countDownBeforeInitialize = 0;
                 }
-            }
-            else {
+            } else {
                 //TODO: Handle the empty data
             }
         }
@@ -158,22 +156,21 @@ public class FireBasePostHandler {
         }
     };
 
-    public void CreatePost(final PostObject post, final Uri uri, final UpdateStatus updateStatus ) {
+    public void CreatePost(final PostObject post, final Uri uri, final UpdateStatus updateStatus) {
 
         final long setPostID = post.getPostID();
 
         if (uri != null) { // we have an image to save
             SavePostImage(post, uri);
-        }
-        else{
+        } else {
             UpdatePost(post);
         }
         updateStatus.DataIsLoaded();
     }
 
-    public void SavePostImage(final PostObject postObject, Uri uri){
+    public void SavePostImage(final PostObject postObject, Uri uri) {
 
-        final StorageReference postImageRef = UserPostImageStorageReference.child("Posts").child(""+ postObject.getUserID()).child(""+ postObject.getPostID()).child("post_image");
+        final StorageReference postImageRef = UserPostImageStorageReference.child("Posts").child("" + postObject.getUserID()).child("" + postObject.getPostID()).child("post_image");
 
         postImageRef.putFile(uri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -196,17 +193,17 @@ public class FireBasePostHandler {
 
     }
 
-    public void UpdatePost(PostObject postObject){
-        Map<String,Object> mappedUser = postObject.toMap();
-        Task performTask = postsDB.child(postObject.getUserID()).child(""+ postObject.getPostID()).updateChildren(mappedUser).addOnCompleteListener(
+    public void UpdatePost(PostObject postObject) {
+        Map<String, Object> mappedUser = postObject.toMap();
+        Task performTask = postsDB.child(postObject.getUserID()).child("" + postObject.getPostID()).updateChildren(mappedUser).addOnCompleteListener(
                 new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             Log.d("DATABASE", "Successful in trying to gain data!"); // Find out why we need this twice!
 
                             maxId++;
-                        }else {
+                        } else {
                             Log.e("DATABASE", Objects.requireNonNull(Objects.requireNonNull(task.getException()).getMessage())); // Find out why we need this twice!
                         }
                     }
@@ -215,12 +212,12 @@ public class FireBasePostHandler {
 
     }
 
-    public ArrayList<PostObject> getCurrentUserAndFriendsPosts(){
+    public ArrayList<PostObject> getCurrentUserAndFriendsPosts() {
         return currentUserAndFriendsPosts;
     }
 
 
-    public void UpdatePostsAdapter(){
+    public void UpdatePostsAdapter() {
         // we will override this in the fragment. What this helps us achieve is concurrency
     }
 }

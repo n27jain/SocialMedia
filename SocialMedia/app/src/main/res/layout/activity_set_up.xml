@@ -8,7 +8,6 @@
     android:padding="16dp"
     tools:context=".Activities.SetUpActivity">
 
-
     <TextView
         android:id="@+id/setUpTitle"
         android:layout_width="wrap_content"
@@ -57,7 +56,7 @@
         android:padding="10dp"
         android:selectAllOnFocus="true"
 
-        android:textColor="@color/subTextColor"
+        android:textColor="@color/buttonTextColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editDP" />
@@ -70,21 +69,16 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="24dp"
         android:background="@drawable/round_register_button"
-
         android:drawableStart="@drawable/name"
-
         android:drawablePadding="10dp"
         android:hint="Full Name"
-
         android:imeActionLabel="@string/action_sign_in_short"
         android:imeOptions="actionDone"
         android:inputType="textPersonName"
         android:padding="10dp"
-
         android:selectAllOnFocus="true"
-        android:textColor="@color/subTextColor"
+        android:textColor="@color/buttonTextColor"
         app:layout_constraintEnd_toEndOf="parent"
-
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/username" />
 
@@ -114,17 +108,13 @@
         android:padding="10dp"
         />
 
-
     <Button
         android:id="@+id/upDateProfileButton"
-
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
         android:layout_marginStart="48dp"
-
         android:layout_marginTop="25dp"
-
         android:layout_marginEnd="48dp"
         android:background="@drawable/round_register_button"
         android:onClick="UpdateProfile"
@@ -133,12 +123,7 @@
         android:textColor="@color/buttonTextColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-
         app:layout_constraintTop_toBottomOf="@+id/gender"
-
         />
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

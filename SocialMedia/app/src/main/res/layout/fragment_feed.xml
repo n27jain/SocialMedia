@@ -28,6 +28,7 @@
             android:layout_height="40dp"
             android:textSize="14sp"
             android:background="@color/buttonTextColor"
+            android:textColor="@color/subTextColor"
             android:text="Insert Image" />
 
         <ImageView
@@ -43,6 +44,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/post_placement_mock"
             android:maxLines="8"
+            android:textColor="@color/subTextColor"
             android:textColorHint="@color/subTextColor"
             android:inputType="textMultiLine" />
 

@@ -17,14 +17,10 @@ import com.example.socialmedia.R;
 
 public class FriendsFragment extends Fragment {
     private String resultUri = null;
-
     private String TAG = "FeedFragment";
     private ProgressDialog loadingBar;
-
     private Button findFriendsButton;
     private Button myFriendsButton;
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -20,6 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textColor="@color/buttonTextColor"
             android:text="Chat" />
 
         <Button
@@ -28,6 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="insertFeedView"
+            android:textColor="@color/buttonTextColor"
             android:text="feed" />
 
         <Button
@@ -36,6 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="insertFriendsView"
+            android:textColor="@color/buttonTextColor"
             android:text="friend" />
 
         <Button
@@ -43,6 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textColor="@color/buttonTextColor"
             android:text="Notify" />
 
 

@@ -2,7 +2,6 @@ package com.example.socialmedia.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.example.socialmedia.Handlers.FireBaseUserDataHandler;
 import com.example.socialmedia.Objects.UserAccount;
 import com.example.socialmedia.R;
@@ -27,7 +25,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-
 import java.util.Objects;
 
 public class RegisterOrSignInActivity extends AppCompatActivity {

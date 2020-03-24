@@ -26,7 +26,7 @@
         android:layout_marginTop="4dp"
         android:layout_marginEnd="8dp"
         android:text="Username"
-        android:textColor="@color/white"
+        android:textColor="@color/buttonTextColor"
         android:textSize="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,6 +40,7 @@
         android:layout_marginBottom="40dp"
         android:text="edit"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="@color/buttonTextColor"
         app:layout_constraintStart_toEndOf="@+id/profileSettingsImageViewButton" />
 
     <Button
@@ -50,5 +51,6 @@
         android:layout_marginBottom="60dp"
         android:text="Log Out"
         app:layout_constraintBottom_toTopOf="@+id/editProfile"
+        android:textColor="@color/buttonTextColor"
         app:layout_constraintStart_toEndOf="@+id/profileSettingsImageViewButton" />
 </androidx.constraintlayout.widget.ConstraintLayout>

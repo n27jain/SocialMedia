@@ -39,11 +39,8 @@ import static android.app.Activity.RESULT_OK;
 
 
 public class FeedFragment extends Fragment {
-
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-
     //TODO: Create a loading wheel right now our info is misleading.
-
     private Button postButton;
     private Button insertImageButton;
     private TextView postMessage;
@@ -52,13 +49,9 @@ public class FeedFragment extends Fragment {
     private String TAG = "FeedFragment";
     private ProgressDialog loadingBar;
     private FireBasePostHandler postHandler;
-
-
     private RecyclerView allPostsRecyclerView;
     private ArrayList<PostObject> ListOfPosts;
     private PostsAdapter postsAdapter;
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,7 +89,7 @@ public class FeedFragment extends Fragment {
         insertImageButton.setOnClickListener(insertImageButtonOnClickListener);
         loadingBar = new ProgressDialog(getActivity());
 
-        //initAdapter();
+        initAdapter();
     }
 
     private void initAdapter(){
@@ -180,7 +173,6 @@ public class FeedFragment extends Fragment {
             if(resultCode == RESULT_OK){
                 Uri setImage =result.getUri();
                 resultUri = setImage.toString();
-
                 ViewGroup.LayoutParams layoutParams = uploaded_image.getLayoutParams();
                 final float scale = getContext().getResources().getDisplayMetrics().density;
                 int pixels = (int) (250 * scale + 0.5f);// convert pixels to dp by display size
@@ -188,7 +180,6 @@ public class FeedFragment extends Fragment {
                 uploaded_image.setLayoutParams(layoutParams);
                 uploaded_image.setImageURI(setImage);
                 insertImageButton.setText("Change Image");
-
             }
         }
     }

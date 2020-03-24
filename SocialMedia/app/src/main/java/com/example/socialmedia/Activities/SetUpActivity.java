@@ -52,51 +52,38 @@ public class SetUpActivity extends AppCompatActivity {
     CircleImageView editDP;
     final static int GALLERY_CODE_PICK = 1;
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_up);
         loadingBar = new ProgressDialog(this);
         firebaseAuth = FirebaseAuth.getInstance();
-
         handler = new FireBaseUserDataHandler();// object for handling DB
-
         username = findViewById(R.id.username);
         fullname = findViewById(R.id.fullName);
-
         //Spinners
         genderSpinner = findViewById(R.id.gender);
         countrySpinner =findViewById(R.id.country);
+
         editDP = findViewById(R.id.editDP);
-
         initAdapter();// set up our adapters
-
         SetUpFromExistingInfo();
 
     }
-
 
     private void initAdapter() {
         genderList = new ArrayList<>();
         genderList.add(new SpinnerObject("Male",R.drawable.male, Constants.GEN_MALE  ));
         genderList.add(new SpinnerObject("Female",R.drawable.female,Constants.GEN_FEMALE ));
         genderList.add(new SpinnerObject("Other",R.drawable.other,Constants.GEN_OTHER ));
-
-
         countryList = new ArrayList<>();
         countryList.add(new SpinnerObject("USA",R.drawable.usa,Constants.USA ));
         countryList.add(new SpinnerObject("Canada",R.drawable.canada,Constants.CAN));
         countryList.add(new SpinnerObject("India",R.drawable.india,Constants.INDIA ));
-
         genderSpinnerAdapter = new SpinnerAdapter(this, genderList);
         countrySpinnerAdapter = new SpinnerAdapter(this, countryList);
-
         genderSpinner.setAdapter(genderSpinnerAdapter);
         countrySpinner.setAdapter(countrySpinnerAdapter);
-
     }
 
     private void SetUpFromExistingInfo() { // Here we will take whatever info we could have gotten from our log in and test it up here.
@@ -122,34 +109,25 @@ public class SetUpActivity extends AppCompatActivity {
         if(name != null){
             fullname.setText(name);
         }
-
-
     }
 
     public void UpdateProfile(View view) {
 
         String tUsername = username.getText().toString();
         String tFullname = fullname.getText().toString();
-
         int tGender = ((SpinnerObject) genderSpinner.getSelectedItem()).storeValue;
         int tCountry= ((SpinnerObject) countrySpinner.getSelectedItem()).storeValue;
 
-
         if(!isValidUserName(tUsername)){
-            //Toast.makeText(SetUpActivity.this,"Invalid Username", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SetUpActivity.this,"Invalid Username", Toast.LENGTH_SHORT).show();
         }
         else if(!isValidFullName(tFullname)){
             Toast.makeText(SetUpActivity.this,"Unaccepted Full Name", Toast.LENGTH_SHORT).show();
         }
-
         else{
             //We got the info we need to update!
             MakeAndSaveProfile(tUsername,tFullname,tCountry,tGender);
         }
-
-
-
-
     }
 
     private void MakeAndSaveProfile(final String tUsername , final String tFullname, final int tCountry, final int tGender  ) {
@@ -207,8 +185,6 @@ public class SetUpActivity extends AppCompatActivity {
     }
 
     private Boolean isValidUserName(String in){
-
-
 
         if(in == null || in.isEmpty() || in.length() > 50 || ! in.matches("[a-zA-Z0-9]*")) {
 
