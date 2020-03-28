@@ -12,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -43,7 +44,7 @@ public class FeedFragment extends Fragment {
     //TODO: Create a loading wheel right now our info is misleading.
     private Button postButton;
     private Button insertImageButton;
-    private TextView postMessage;
+    private EditText postMessage;
     private ImageView uploaded_image;
     private String resultUri = null;
     private String TAG = "FeedFragment";
@@ -94,14 +95,10 @@ public class FeedFragment extends Fragment {
 
     private void initAdapter(){
          ListOfPosts = postHandler.getCurrentUserAndFriendsPosts();
-
          postsAdapter = new PostsAdapter(getContext(),ListOfPosts);
          allPostsRecyclerView.setAdapter(postsAdapter);
          allPostsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL,true));
-
     }
-
-
 
     private OnClickListener postButtonOnClickListener = new OnClickListener() {
         @Override
@@ -155,13 +152,13 @@ public class FeedFragment extends Fragment {
             }
         }
     };
+
     private OnClickListener insertImageButtonOnClickListener = new OnClickListener() {
         @Override
         public void onClick(View view) {
             // Make the ability for user to upload image. We need to get context of our activity
             CropImage.activity()
                     .start((Activity) getContext(), FeedFragment.this);
-
         }
     };
 
